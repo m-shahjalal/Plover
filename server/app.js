@@ -1,13 +1,25 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 
-const PORT = process.env.PORT || 5000;
+dotenv.config();
+const PORT = process.env.PORT || 8080;
 const app = express();
 
 app.get('/', (req, res) => {
   res.send('Hello world');
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
-});
+mongoose.connect(
+  process.env.DBURI,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err) => {
+    if (!err) {
+      app.listen(PORT, () => {
+        console.log(`Server listening on http://localhost:${PORT}`);
+      });
+    } else {
+      console.log(err);
+    }
+  }
+);
