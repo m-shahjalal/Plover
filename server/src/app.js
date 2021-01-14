@@ -1,8 +1,9 @@
-import dotenv from 'dotenv';
-import express from 'express';
-import mongoose from 'mongoose';
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
 
-dotenv.config();
+const logger = require('./lib/logger');
+
 const PORT = process.env.PORT || 8080;
 const app = express();
 
@@ -16,7 +17,7 @@ mongoose.connect(
   (err) => {
     if (!err) {
       app.listen(PORT, () => {
-        console.log(`Server listening on http://localhost:${PORT}`);
+        logger.info(`Server listening on http://localhost:${PORT}`);
       });
     } else {
       console.log(err);
