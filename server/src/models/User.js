@@ -1,18 +1,14 @@
-const { Schema, module } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema(
   {
-    name: {
-      type: String,
-      trim: true,
-      required: true,
-      min: 3,
-      max: 30,
-    },
     email: {
       type: String,
-      trim: true,
       required: true,
+      validate: (email) => {
+        var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        return re.test(email);
+      },
     },
     password: {
       type: String,

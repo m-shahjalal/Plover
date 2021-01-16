@@ -14,6 +14,13 @@ const ProfileSchema = new Schema(
       maxlength: 15,
       trim: true,
     },
+    name: {
+      type: String,
+      trim: true,
+      required: true,
+      min: 3,
+      max: 30,
+    },
     title: {
       type: String,
       trim: true,
