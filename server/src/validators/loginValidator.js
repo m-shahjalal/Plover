@@ -12,4 +12,10 @@ module.exports = [
         }
       });
     }),
+
+  body('password')
+    .isEmpty()
+    .withMessage('please enter a password')
+    .isLength({ min: 6 })
+    .withMessage('password must be at least 6 characters'),
 ];

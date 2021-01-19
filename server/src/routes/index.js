@@ -1,6 +1,7 @@
 // dependencies
 const signup = require('./signup');
 const login = require('./login');
+const logout = require('./logout');
 
 // Default home route
 const home = (req, res) => {
@@ -16,6 +17,10 @@ const routers = [
   {
     path: '/login',
     controller: login,
+  },
+  {
+    path: '/logout',
+    controller: logout,
   },
   {
     path: '/',
