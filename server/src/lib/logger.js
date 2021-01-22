@@ -20,14 +20,13 @@ const logger = createLogger({
     format.colorize(),
     format.timestamp(),
     format.printf(({ timestamp, level, message }) => {
-      const ts = timestamp.slice(0, 19).replace('T', '');
+      const ts = timestamp.slice(0, 19).replace('T', '|');
       return `${ts} ${level}: ${message}`;
     })
   ),
   transports: [transport],
 });
 
-if (process.env.NODE_ENV !== 'production')
-  logger.clear().add(new transports.Console());
+if (process.env.NODE_ENV !== 'production') logger.add(new transports.Console());
 
 module.exports = logger;

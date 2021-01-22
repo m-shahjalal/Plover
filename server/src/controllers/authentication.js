@@ -1,6 +1,6 @@
 // dependencies
 const mongoose = require('mongoose');
-const { validationResult } = require('express-validator');
+const { validationResult, Result } = require('express-validator');
 const bcrypt = require('bcrypt');
 
 const User = require('../models/User');
@@ -25,16 +25,14 @@ auth.signupPost = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     console.log(errors);
-    logger.error(errors);
     return res.status(409).json('something gone wrong');
   }
-  const user = new User({
-    email,
-    password: hashPassword,
-  });
-
-  const data = await user.save();
   try {
+    const user = new User({
+      email,
+      password: hashPassword,
+    });
+    const data = await user.save();
     res.json({ message: 'user created successfully', data });
   } catch (err) {
     next(err);
@@ -47,16 +45,16 @@ auth.loginGet = (req, res) => {
 };
 
 // login controller
-auth.loginPost = async (req, res) => {
+auth.loginPost = async (req, res, next) => {
   const errors = validationResult(req);
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  if (!user) throw new Error('No user found');
+  if (!user) return next({ message: 'No user found' });
   const hashPassword = await bcrypt.compare(password, user.password);
-  if (!hashPassword) throw new Error('Password does not match');
+  if (!hashPassword) throw next({ message: 'Password does not match' });
 
   res.cookie('jwt', jwt, { maxAge: 1000 * 60 * 60 * 24 * 3, httpOnly: true });
-  res.json({ message: 'Login successful' });
+  res.json({ message: 'Login successful', user });
 };
 
 // logout controller

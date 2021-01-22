@@ -4,16 +4,6 @@ const logger = require('./logger');
 // module scaffold
 const errors = {};
 
-// log the error by winston logger
-errors.log = (err) => {
-  const errObj = { ...err };
-
-  if (errObj instanceof Object) {
-    logger.error(Object.keys(errObj).map((err) => errObj.msg));
-  } else logger.error(errObj);
-  return err;
-};
-
 // define not found error
 errors.notFound = (req, res, next) => {
   const error = new Error('Page not found');
@@ -23,11 +13,11 @@ errors.notFound = (req, res, next) => {
 
 // errors handling
 errors.errorHandler = (error, req, res, next) => {
-  errors.log(error);
   if (error.status === 404) {
-    res.json({ Error: 'Page not found', ...error });
+    res.json({ Error: '404, page not found' });
   } else {
-    res.json({ Error: 'internal server error', ...error });
+    logger.error(error.message);
+    res.json({ Error: error.message });
   }
 };
 
