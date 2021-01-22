@@ -8,21 +8,16 @@ const postSchema = new Schema(
       required: true,
       maxlength: 100,
     },
-    body: {
-      type: String,
-      trim: true,
-      required: true,
-    },
     author: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    tags: {
-      type: [String],
+    content: {
+      type: String,
+      trim: true,
       required: true,
     },
-    thumbnail: String,
     likes: [
       {
         type: Schema.Types.ObjectId,

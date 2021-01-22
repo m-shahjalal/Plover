@@ -2,11 +2,7 @@
 const signup = require('./signup');
 const login = require('./login');
 const logout = require('./logout');
-
-// Default home route
-const home = (req, res) => {
-  res.json({ message: 'Hello world' });
-};
+const post = require('./post');
 
 // routes array
 const routers = [
@@ -23,8 +19,8 @@ const routers = [
     controller: logout,
   },
   {
-    path: '/',
-    controller: home,
+    path: '/post',
+    controller: post,
   },
 ];
 
