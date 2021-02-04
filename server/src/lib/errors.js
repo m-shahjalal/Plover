@@ -14,6 +14,7 @@ errors.notFound = (req, res, next) => {
 // errors handling
 errors.errorHandler = (error, req, res, next) => {
   if (error.status === 404) {
+    logger.error(error.message);
     res.json({ Error: '404, page not found' });
   } else {
     logger.error(error.message);
