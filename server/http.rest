@@ -1,0 +1,17 @@
+GET http://localhost:5000/post HTTP/1.1
+
+
+### login route
+POST http://localhost:5000/login/
+Content-Type: Application/json
+
+{
+    "email": "test@mail.com",
+    "password": "password"
+}
+
+### post route
+GET http://localhost:5000/post
+Content-Type: apllication/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMGFmODExNDdmZjRkMTEwZjE1NzM1MCIsImlhdCI6MTYxMjA3Njk5NSwiZXhwIjoxNjEyMzM2MTk1fQ.YwfFNN7xtY9VqMIVU_RJCEQXpmOqfeliU9Im7yGwZqY
+
