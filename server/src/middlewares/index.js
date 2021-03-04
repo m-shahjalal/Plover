@@ -3,12 +3,13 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { urlencoded, json } = require('express');
 
-const auth = require('./auth');
+const middlewares = [
+	cors(),
+	urlencoded({ extended: true }),
+	json(),
+	cookieParser(),
+];
 
 module.exports = (app) => {
-	app.use(cors());
-	app.use(urlencoded({ extended: true }));
-	app.use(json());
-	app.use(cookieParser());
-	app.use(auth);
+	middlewares.forEach((middleware) => app.use(middleware));
 };

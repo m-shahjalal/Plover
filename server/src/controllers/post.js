@@ -1,8 +1,6 @@
 // dependencies
 const Profile = require('../models/Profile');
 const Post = require('../models/Post');
-const Comment = require('../models/Comment');
-const { findByIdAndUpdate } = require('../models/Profile');
 
 // contents scaffolding
 const contents = {};
@@ -10,7 +8,7 @@ const contents = {};
 // get all posts
 contents.getAll = async (req, res, next) => {
 	try {
-		const contents = await Post.find().populate('author', 'email');
+		const contents = await Post.find().populate('author', 'username');
 		if (contents.length) {
 			res.json(contents);
 		} else {
@@ -21,11 +19,11 @@ contents.getAll = async (req, res, next) => {
 	}
 };
 
-// get a contact details
+// get a post details
 contents.getPost = async (req, res) => {
 	const id = req.params.id;
 	try {
-		const post = await Post.findById(id).populate({ path: 'comments' });
+		const post = await Post.findById(id);
 		if (post) {
 			res.status(200).json(post);
 		} else {
@@ -57,6 +55,7 @@ contents.updatePost = async (req, res) => {
 	if (id) {
 		title && (await Post.findByIdAndUpdate(id, { title }));
 		content && (await Post.findByIdAndUpdate(id, { content }));
+
 		const updated = await Post.findById(id);
 		console.log(updated);
 		res.json(updated);
@@ -65,7 +64,7 @@ contents.updatePost = async (req, res) => {
 	}
 };
 
-// delete a content
+// delete a Post
 contents.deletePost = async (req, res) => {
 	const id = req.params.id;
 	try {
@@ -76,21 +75,65 @@ contents.deletePost = async (req, res) => {
 	}
 };
 
+// create a comment
+contents.createComment = async (req, res) => {
+	const user = req.user;
+	if (!user) {
+		return res
+			.status(409)
+			.json({ message: 'Please login or register first' });
+	}
+
+	try {
+		const { postId, comment } = req.body;
+		const post = await Post.findById(postId);
+		const returnPost = await post.comments.push({
+			user,
+			body: comment,
+		});
+		res.status(201).json(returnPost);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: 'forbidden request' });
+	}
+};
+
+// update comment
+contents.updateComment = async (req, res) => {
+	const user = req.user;
+	if (!user) {
+		return res
+			.status(409)
+			.json({ message: 'Please login or register first' });
+	}
+
+	try {
+		const { postId, comment } = req.body;
+		const post = await Post.findById(postId);
+
+		if (post.comments.user !== user) {
+			return res
+				.status(409)
+				.json({ message: 'You are not allowed to edit this' });
+		}
+
+		res.status(201).json(returnPost);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: 'forbidden request' });
+	}
+};
+
 // comment api
 contents.commentPost = async (req, res) => {
 	const id = req.params.id;
-	const { user, body } = req.body;
+	const { comment, reply } = req.body;
 	try {
-		const post = await Post.findOne({ _id: id });
-		if (!post) {
+		if (id) {
+			comment && (await Post.findByIdAndUpdate(id, { comment }));
+			reply && (await Post.findByIdAndUpdate(id, { reply }));
 			return res.status(404).json({ Error: 'No content found' });
 		}
-		const comment = await Comment.create({
-			post: id,
-			user,
-			body,
-		});
-
 		// push the comment to the post
 		await Post.findOneAndUpdate(
 			{ _id: id },

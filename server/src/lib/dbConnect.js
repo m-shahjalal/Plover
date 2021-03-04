@@ -1,3 +1,5 @@
+const logger = require('./logger');
+
 const mongoose = require('mongoose');
 module.exports = (callback) => {
 	mongoose
@@ -5,7 +7,8 @@ module.exports = (callback) => {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 			useFindAndModify: false,
+			useCreateIndex: true,
 		})
-		.then(callback())
+		.then(callback)
 		.catch((err) => logger.error(err));
 };

@@ -20,7 +20,7 @@ auth.signupGet = (req, res) => {
 // signup route controller
 auth.signupPost = async (req, res, next) => {
 	const errors = validationResult(req);
-	const { email, password } = req.body;
+	const { username, email, password } = req.body;
 	try {
 		const hashPassword = await bcrypt.hash(password, 10);
 
@@ -29,6 +29,7 @@ auth.signupPost = async (req, res, next) => {
 			return res.status(409).json('something gone wrong');
 		}
 		const user = new User({
+			username,
 			email,
 			password: hashPassword,
 		});
@@ -46,8 +47,12 @@ auth.loginGet = (req, res) => {
 
 // login controller
 auth.loginPost = async (req, res, next) => {
-	const { email, password } = req.body;
-	const user = await User.findOne({ email });
+	const { username, email, password } = req.body;
+	const user = username
+		? await User.findOne({ username })
+		: await User.findOne({ email });
+	console.log('this is user', user);
+
 	if (!user) return next({ message: 'No user found' });
 	const hashPassword = await bcrypt.compare(password, user.password);
 	if (!hashPassword) return next({ message: 'Password does not match' });

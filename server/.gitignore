@@ -58,7 +58,7 @@ bower_components
 build/Release
 
 # Dependency directories
-/*/node_modules/
+/node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -137,3 +137,4 @@ dist
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,node,vscode
+/*/node_modules/
